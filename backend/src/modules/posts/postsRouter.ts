@@ -1,12 +1,14 @@
 import { Router } from "express";
 import PostsController from "./postsController";
+import isAuthenticated from "../../middlewares/auth";
 
 const router = Router();
 
-router.post("/posts", PostsController.createPost);
+router.post("/posts", isAuthenticated, PostsController.createPost);
 router.get("/posts", PostsController.getPosts);
-router.put("/posts/:id", PostsController.updatePost);
-router.delete("/posts/id", PostsController.deletePost);
+router.get("/posts/:id", PostsController.getPostById);
+router.put("/posts/:id", isAuthenticated, PostsController.updatePost);
+router.delete("/posts/id", isAuthenticated, PostsController.deletePost);
 
 const postsRouter = router;
 export default postsRouter;
