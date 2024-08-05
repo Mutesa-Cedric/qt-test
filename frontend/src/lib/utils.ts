@@ -1,6 +1,6 @@
 
 export function generatePageTitle(title: string) {
-    return title.concat(" | App Name")
+    return title.concat(" | Postify");
 }
 
 export const getObjValue = (key: string | number, obj: any) => {

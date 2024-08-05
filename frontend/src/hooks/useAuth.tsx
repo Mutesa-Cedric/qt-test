@@ -37,13 +37,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         const fetchUser = async () => {
             try {
-                const { data } = await axios.get("/users/me");
+                const { data } = await axios.get("/auth/me");
                 setUser(data.user);
             } catch (error) {
                 setUser(null);
-                if (location.pathname.includes("/dashboard")) {
-                    navigate("/login");
-                }
+
             } finally {
                 setInitialLoading(false);
             }
@@ -55,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = async (email: string, password: string) => {
         setLoggingIn(true);
         try {
-            const { data } = await axios.post("/users/login", {
+            const { data } = await axios.post("/auth/login", {
                 email,
                 password,
             });
@@ -66,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 message: "Logged in successfully",
                 color: "green",
             });
-            navigate("/dashboard");
+            navigate("/");
         } catch (error) {
             notifications.show({
                 title: "Error",
@@ -81,7 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const register = async (name: string, email: string, password: string) => {
         setRegistering(true);
         try {
-            const { data } = await axios.post("/users/register", {
+            const { data } = await axios.post("/auth/register", {
                 name,
                 email,
                 password,
@@ -93,7 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
             setUser(data.user);
             setCookie("token", data.token, 7);
-            navigate("/dashboard");
+            navigate("/");
         } catch (error) {
             notifications.show({
                 title: "Error",
@@ -110,7 +108,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoggingOut(true);
         try {
             deleteCookie("token");
-            await axios.get("/users/logout");
+            await axios.get("/auth/logout");
             setUser(null);
             notifications.show({
                 title: "Success",

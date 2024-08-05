@@ -1,3 +1,6 @@
 import { atom } from "recoil";
-import { Product } from "../types";
 
+export const searchState = atom({
+    key: "searchState",
+    default: "",
+});
