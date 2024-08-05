@@ -40,7 +40,10 @@ export default class PostsController {
                     authorId: parseInt(req.user)
                 }
             });
-            res.status(201).json(post);
+            res.status(201).json({
+                success: true,
+                post
+            });
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });
         }
@@ -70,6 +73,7 @@ export default class PostsController {
                 }
             });
             res.status(200).json({
+                success: true,
                 posts
             });
         } catch (error) {
@@ -112,7 +116,10 @@ export default class PostsController {
                     postId: parseInt(id)
                 }
             });
-            res.status(200).json({ post, comments });
+            res.status(200).json({
+                success: true,
+                post, comments
+            });
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });
         }
@@ -163,7 +170,10 @@ export default class PostsController {
                     content
                 }
             });
-            res.status(200).json(post);
+            res.status(200).json({
+                success: true,
+                post
+            });
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });
         }
@@ -196,7 +206,10 @@ export default class PostsController {
                     id: parseInt(id)
                 }
             });
-            res.status(200).json(post);
+            res.status(200).json({
+                success: true,
+                post
+            });
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });
         }

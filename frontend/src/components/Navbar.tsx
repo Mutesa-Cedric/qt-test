@@ -5,7 +5,7 @@ import { Button } from '@mantine/core'
 import { Link } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import useAuth from '../hooks/useAuth'
-import { searchState } from '../store'
+import { searchState, showAddOrEditPostModalState } from '../store'
 
 const userNavigation = [
     { name: 'Sign out', href: '#' },
@@ -16,6 +16,7 @@ export default function Navbar() {
 
     const { user } = useAuth();
     const [search, setSearch] = useRecoilState(searchState);
+    const [, setShowAddPost] = useRecoilState(showAddOrEditPostModalState);
 
     return (
         <>
@@ -97,6 +98,10 @@ export default function Navbar() {
 
                             {user ?
                                 <Button
+                                    onClick={() => setShowAddPost({
+                                        show: true,
+                                        action: 'add'
+                                    })}
                                 >
                                     Create Post
                                 </Button> :
