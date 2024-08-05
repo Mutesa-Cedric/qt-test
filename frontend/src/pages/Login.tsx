@@ -30,57 +30,60 @@ export default function Login() {
             <Helmet>
                 <title>{generatePageTitle("Login")}</title>
             </Helmet>
-            <div className="mx-auto w-full max-w-sm lg:w-96">
-                <div>
-                    <Link to={'/'}>
-                        <p className="font-semibold text-xl text-gray-600 italic">App Name</p>
-                    </Link>
-                    <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        Sign in to your account
-                    </h2>
-                    <p className="mt-2 text-sm leading-6 text-gray-500">
-                        Not a member?{' '}
-                        <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-500">
-                            Create an account
-                        </Link>
-                    </p>
-                </div>
-
-                <div className="mt-10">
+            <div className="w-full h-screen bg-gray-100 flex items-center justify-center">
+                <div className="mx-auto w-full max-w-sm lg:w-96 bg-white rounded-md shadow p-6 flex flex-col items-center">
                     <div>
-                        <form
-                            onSubmit={handleSubmit}
-                            className="space-y-6">
-                            <AuthInput
-                                label="Email Address"
-                                required
-                                autoComplete="email"
-                                type="email"
-                                name="email"
-                            />
+                        <Link to={'/'}>
+                            <p className="font-semibold text-lg text-gray-600  text-center">&larr;  Go back</p>
+                        </Link>
+                        <h2 className="mt-4 text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                            Sign in to your account
+                        </h2>
+                        <p className="mt-2 text-sm leading-6 text-gray-500">
+                            Not a member?{' '}
+                            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-500">
+                                Create an account
+                            </Link>
+                        </p>
+                    </div>
 
-                            <AuthInput
-                                label="Password"
-                                required
-                                autoComplete="current-password"
-                                type="password"
-                                name="password"
+                    <div className="mt-10 w-full">
+                        <div className="w-full">
+                            <form
+                                onSubmit={handleSubmit}
+                                className="space-y-6 w-full">
+                                <AuthInput
+                                    label="Email Address"
+                                    required
+                                    autoComplete="email"
+                                    type="email"
+                                    name="email"
+                                />
 
-                            />
+                                <AuthInput
+                                    label="Password"
+                                    required
+                                    autoComplete="current-password"
+                                    type="password"
+                                    name="password"
 
-                            <div>
-                                <Button
-                                    type="submit"
-                                    className="w-full"
-                                    loading={loggingIn}
-                                >
-                                    Sign in
-                                </Button>
-                            </div>
-                        </form>
+                                />
+
+                                <div>
+                                    <Button
+                                        type="submit"
+                                        className="w-full"
+                                        loading={loggingIn}
+                                    >
+                                        Sign in
+                                    </Button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </>
     )
 }
