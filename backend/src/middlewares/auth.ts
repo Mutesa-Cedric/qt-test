@@ -20,7 +20,7 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
 
     // attach payload to request object
     // @ts-ignore
-    req.user = payload;
+    req.user = parseInt(payload);
     next();
 };
 

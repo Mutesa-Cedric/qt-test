@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import useSWR from "swr";
 import axios from "../lib/axios.config";
-import { showAddOrEditPostModalState, showDeletePostModalState } from "../store";
+import { postViewState, showAddOrEditPostModalState, showDeletePostModalState } from "../store";
 import { Post } from "../types";
 import useAuth from "./useAuth";
+import { useNavigate } from "react-router-dom";
 
 
 export default function usePosts() {
@@ -16,6 +17,8 @@ export default function usePosts() {
     const [updatingPost, setUpdatingPost] = useState(false);
     const [, setShowAddOrEdit] = useRecoilState(showAddOrEditPostModalState);
     const [, setShowDelete] = useRecoilState(showDeletePostModalState);
+    const navigate = useNavigate();
+    const [, setPostView] = useRecoilState(postViewState);
 
     const { data: posts, isLoading, error, mutate } = useSWR<Post[]>("/posts", async (url) => {
         if (!user) return;
@@ -27,7 +30,7 @@ export default function usePosts() {
         mutate();
     }, [user])
 
-    const createPost = async (post: Omit<Post, "id" | "createdAt"|"author">) => {
+    const createPost = async (post: Omit<Post, "id" | "createdAt" | "author" | "comments">) => {
         setCreatingPost(true);
         try {
             const { data } = await axios.post("/posts", post);
@@ -70,6 +73,7 @@ export default function usePosts() {
                 });
                 mutate(posts?.filter(post => post.id !== id));
                 setShowDelete(null);
+                navigate("/");
             } else {
                 notifications.show({
                     title: "Error",
@@ -100,6 +104,7 @@ export default function usePosts() {
                     color: "blue"
                 });
                 mutate(posts?.map(p => p.id === post.id ? post : p));
+                setPostView(post);
                 setShowAddOrEdit(null);
             } else {
                 notifications.show({

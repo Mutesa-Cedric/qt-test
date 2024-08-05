@@ -185,7 +185,7 @@ export default class AuthController {
             const user = await prisma.user.findUnique({
                 where: {
                     // @ts-ignore
-                    id: req.user
+                    id: parseInt(req.user)
                 },
                 select: {
                     id: true,

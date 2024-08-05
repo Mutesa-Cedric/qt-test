@@ -106,19 +106,23 @@ export default class PostsController {
             const post = await prisma.post.findUnique({
                 where: {
                     id: parseInt(id)
+                },
+                include: {
+                    comments: {
+                        include: {
+                            author: true
+                        }
+                    },
+                    author: true
                 }
             });
             if (!post) {
                 return res.status(404).json({ message: "Post not found" });
             }
-            const comments = await prisma.comment.findMany({
-                where: {
-                    postId: parseInt(id)
-                }
-            });
+
             res.status(200).json({
                 success: true,
-                post, comments
+                post
             });
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });

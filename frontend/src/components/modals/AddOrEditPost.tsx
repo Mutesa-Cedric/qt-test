@@ -61,7 +61,7 @@ export default function AddOrEditPostModal() {
                         loading={creatingPost || updatingPost}
                         disabled={creatingPost || updatingPost}
                     >
-                        {show?.action === 'add' ? 'Add Product' : 'Update Product'}
+                        {show?.action === 'add' ? 'Add Post' : 'Update Post'}
                     </Button>
                 </div>
 

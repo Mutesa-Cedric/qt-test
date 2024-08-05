@@ -13,6 +13,7 @@ import NotFound from "./pages/404";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import PostView from "./pages/PostView";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/post/:id" element={<PostView />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>

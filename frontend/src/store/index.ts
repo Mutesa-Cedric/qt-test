@@ -22,3 +22,8 @@ export const showDeletePostModalState = atom<{
     key: "DeletePost",
     default: null,
 });
+
+export const postViewState = atom<Post | null>({
+    key: "PostView",
+    default: null,
+});

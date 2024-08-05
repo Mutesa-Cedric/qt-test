@@ -1,45 +1,54 @@
+import { useMemo } from "react";
 import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import EmptyView from "../components/EmptyView";
+import MainLayout from "../components/layouts/MainLayout";
 import LoadingView from "../components/LoadingView";
-import Navbar from "../components/Navbar";
-import useAuth from "../hooks/useAuth";
 import usePosts from "../hooks/usePosts";
 import { generatePageTitle } from "../lib/utils";
 import { searchState } from "../store";
-import { Avatar } from "@mantine/core";
+import { Post } from "../types";
 
 export default function Home() {
-    const { user } = useAuth();
     const { posts, fetchingPosts } = usePosts();
     const search = useRecoilValue(searchState);
+    const filteredPosts = useMemo(() => {
+        return posts?.filter(post => post.title.includes(search) || post.content.includes(search));
+    }
+        , [posts, search]);
 
     return (
         <>
             <Helmet>
                 <title>{generatePageTitle("Welcome")}</title>
             </Helmet>
-            <main className="bg-gray-100 w-full min-h-screen gap-y-6">
-                <Navbar />
-                <div className="max-w-7xl mx-auto px-6">
-                    {fetchingPosts && <LoadingView message="Fetching posts..." />}
-                    {(posts && posts.length === 0) && <EmptyView message={`no posts available ${search.length ? `containing '${search}'` : ''}!`} />}
-                    {(posts && posts.length > 0) && <div className="space-y-5">
-                        {posts && posts.map((post: any) => (
-                            <div key={post.id} className="bg-white rounded-lg shadow-md p-6">
-                                <h1 className="text-xl font-semibold text-gray-800">{post.title}</h1>
-                                <p className="text-gray-600 mt-2">{post.body}</p>
-                                {/* author */}
-                                <div className="flex items-center mt-4">
-                                    <Avatar size="sm" alt={post.author.name} />
-                                    <p className="text-gray-700 ml-2">{post.author.name}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>}
-
-                </div>
-            </main>
+            <MainLayout>
+                {fetchingPosts && <LoadingView message="Fetching posts..." />}
+                {(filteredPosts && filteredPosts.length === 0) && <EmptyView message={`no posts available ${search.length ? `containing '${search}'` : ''}!`} />}
+                {(filteredPosts && filteredPosts.length > 0) && <div className="space-y-5 pt-10">
+                    {filteredPosts && filteredPosts.map((post: any) => (
+                        <PostCard post={post} />
+                    ))}
+                </div>}
+            </MainLayout>
         </>
     )
+}
+
+
+const PostCard = ({ post }: { post: Post }) => {
+    const navigate = useNavigate();
+    return (
+        <div
+            onClick={() => navigate(`/post/${post.id}`)}
+            key={post.id} className="bg-white rounded-lg shadow-md p-6 border border-transparent hover:border-blue-100 cursor-pointer">
+            <h1 className="text-2xl font-semibold text-gray-800">{post.title}</h1>
+            <p className="text-gray-700 pb-4 text-sm ">by {post.author.name}</p>
+            <p className="text-gray-600 mt-2 bg-gray-50 p-3 mb-4">{post.content}</p>
+          
+            <p className="text-sm text-gray-700 pt-4">posted at {new Date(post.createdAt).toLocaleString()}</p>
+        </div>
+    )
+
 }
