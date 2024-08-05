@@ -38,6 +38,14 @@ export default class PostsController {
                     content,
                     // @ts-ignore
                     authorId: parseInt(req.user)
+                },
+                include: {
+                    author: {
+                        select: {
+                            name: true,
+                            email: true
+                        }
+                    }
                 }
             });
             res.status(201).json({
@@ -205,6 +213,13 @@ export default class PostsController {
     public static async deletePost(req: Request, res: Response) {
         try {
             const { id } = req.params;
+
+            // delete related comments first
+            await prisma.comment.deleteMany({
+                where: {
+                    postId: parseInt(id)
+                }
+            });
             const post = await prisma.post.delete({
                 where: {
                     id: parseInt(id)
@@ -215,7 +230,79 @@ export default class PostsController {
                 post
             });
         } catch (error) {
+            console.log(error);
             res.status(500).json({ message: "Internal Server Error" });
         }
     }
+
+    // addComment
+
+    /**
+     * @swagger
+     * /posts/{id}/comments:
+     *  post:
+     *    description: Add a comment to a post
+     *    parameters:
+     *      - in: path
+     *        name: id
+     *        required: true
+     *        schema:
+     *          type: integer
+     *      - in: body
+     *        name: comment
+     *        description: The comment to add.
+     *        schema:
+     *          type: object
+     *          required:
+     *            - content
+     *          properties:
+     *            content:
+     *              type: string
+     *    responses:
+     *      201:
+     *        description: Comment added successfully
+     *      404:
+     *        description: Post not found
+     *      500:
+     *        description: Internal Server Error
+     */
+    public static async addComment(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { content } = req.body;
+            const comment = await prisma.comment.create({
+                data: {
+                    content,
+                    // @ts-ignore
+                    authorId: parseInt(req.user),
+                    postId: parseInt(id)
+                }
+            });
+
+            const post = await prisma.post.findUnique({
+                where: {
+                    id: parseInt(id)
+                },
+                include: {
+                    comments: {
+                        include: {
+                            author: true
+                        }
+                    },
+                    author: true
+                }
+            });
+
+            res.status(201).json({
+                success: true,
+                post,
+                comment
+            });
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    }
+
+
 }

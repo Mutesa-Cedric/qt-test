@@ -26,7 +26,8 @@ export default function Home() {
             <MainLayout>
                 {fetchingPosts && <LoadingView message="Fetching posts..." />}
                 {(filteredPosts && filteredPosts.length === 0) && <EmptyView message={`no posts available ${search.length ? `containing '${search}'` : ''}!`} />}
-                {(filteredPosts && filteredPosts.length > 0) && <div className="space-y-5 pt-10">
+                {(filteredPosts && filteredPosts.length > 0) && <div className="space-y-5 pt-6">
+                    <h2 className="font-semibold text-2xl text-gray-700">Recent Posts</h2>
                     {filteredPosts && filteredPosts.map((post: any) => (
                         <PostCard post={post} />
                     ))}
@@ -46,7 +47,7 @@ const PostCard = ({ post }: { post: Post }) => {
             <h1 className="text-2xl font-semibold text-gray-800">{post.title}</h1>
             <p className="text-gray-700 pb-4 text-sm ">by {post.author.name}</p>
             <p className="text-gray-600 mt-2 bg-gray-50 p-3 mb-4">{post.content}</p>
-          
+
             <p className="text-sm text-gray-700 pt-4">posted at {new Date(post.createdAt).toLocaleString()}</p>
         </div>
     )

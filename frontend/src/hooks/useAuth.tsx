@@ -117,11 +117,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
             navigate("/login");
         } catch (error) {
-            notifications.show({
-                title: "Error",
-                message: "An error occurred",
-                color: "red",
-            });
+            setUser(null);
+            navigate("/login");
         } finally {
             setLoggingOut(false);
         }

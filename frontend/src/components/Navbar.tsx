@@ -1,21 +1,16 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Button } from '@mantine/core'
 import { Link } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import useAuth from '../hooks/useAuth'
-import { searchState, showAddOrEditPostModalState } from '../store'
+import { showAddOrEditPostModalState } from '../store'
 
-const userNavigation = [
-    { name: 'Sign out', href: '#' },
-]
 
 
 export default function Navbar() {
 
-    const { user } = useAuth();
-    const [search, setSearch] = useRecoilState(searchState);
+    const { user, logout, loggingOut } = useAuth();
     const [, setShowAddPost] = useRecoilState(showAddOrEditPostModalState);
 
     return (
@@ -25,7 +20,7 @@ export default function Navbar() {
                 as="header"
                 className="bg-white shadow-sm data-[open]:fixed data-[open]:inset-0 data-[open]:z-40 data-[open]:overflow-y-auto lg:static lg:overflow-y-visible data-[open]:lg:static data-[open]:lg:overflow-y-visible"
             >
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
                     <div className="relative flex justify-between lg:gap-8 xl:grid xl:grid-cols-12">
                         <div className="flex md:absolute md:inset-y-0 md:left-0 lg:static xl:col-span-2">
                             <div className="flex flex-shrink-0 items-center">
@@ -39,27 +34,7 @@ export default function Navbar() {
                             </div>
                         </div>
                         <div className="min-w-0 flex-1 md:px-8 lg:px-0 xl:col-span-6">
-                            <div className="flex items-center px-6 py-4 md:mx-auto md:max-w-3xl lg:mx-0 lg:max-w-none xl:px-0">
-                                <div className="w-full">
-                                    <label htmlFor="search" className="sr-only">
-                                        Search
-                                    </label>
-                                    <div className="relative">
-                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                            <MagnifyingGlassIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            id="search"
-                                            name="search"
-                                            type="search"
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)}
-                                            placeholder="search post ..."
-                                            className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                         <div className="flex items-center md:absolute md:inset-y-0 md:right-0 lg:hidden">
                             {/* Mobile menu button */}
@@ -75,8 +50,12 @@ export default function Navbar() {
 
                             {/* Profile dropdown */}
                             <Menu as="div" className="relative ml-5 flex-shrink-0">
-                                <div>
+                                <div className='mr-2'>
+
                                     <MenuButton className="relative flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        <div className='p-2 bg-gray-300 rounded-full'>
+                                            {user?.name.slice(0, 2).toUpperCase()}
+                                        </div>
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">Open user menu</span>
                                     </MenuButton>
@@ -86,13 +65,16 @@ export default function Navbar() {
                                     transition
                                     className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                                 >
-                                    {userNavigation.map((item) => (
-                                        <MenuItem key={item.name}>
-                                            <a href={item.href} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
-                                                {item.name}
-                                            </a>
-                                        </MenuItem>
-                                    ))}
+                                    <MenuItem>
+                                        <Button
+                                            onClick={logout}
+                                            color='red'
+                                            variant='outline'
+                                            className='w-full'
+                                        >
+                                            Sign Out
+                                        </Button>
+                                    </MenuItem>
                                 </MenuItems>
                             </Menu>
 
@@ -133,15 +115,21 @@ export default function Navbar() {
                             </div>
                         </div>
                         <div className="mx-auto mt-3 max-w-3xl space-y-1 px-2 sm:px-4">
-                            {userNavigation.map((item) => (
-                                <a
-                                    key={item.name}
-                                    href={item.href}
-                                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                                >
-                                    {item.name}
-                                </a>
-                            ))}
+                            <Button
+                                onClick={() => setShowAddPost({
+                                    show: true,
+                                    action: 'add'
+                                })}
+                            >
+                                Create Post
+                            </Button>
+                            <Button
+                                variant='outline'
+                                color='red'
+                                onClick={logout}
+                            >
+                                Sign Out
+                            </Button>
                         </div>
                     </div>
                 </PopoverPanel>

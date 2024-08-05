@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import useSWR from "swr";
 import axios from "../lib/axios.config";
 import { postViewState, showAddOrEditPostModalState, showDeletePostModalState } from "../store";
-import { Post } from "../types";
+import { Post, Comment } from "../types";
 import useAuth from "./useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -15,10 +15,11 @@ export default function usePosts() {
     const [creatingPost, setCreatingPost] = useState(false);
     const [deletingPost, setDeletingPost] = useState(false);
     const [updatingPost, setUpdatingPost] = useState(false);
+    const [addingComment, setAddingComment] = useState(false);
     const [, setShowAddOrEdit] = useRecoilState(showAddOrEditPostModalState);
     const [, setShowDelete] = useRecoilState(showDeletePostModalState);
     const navigate = useNavigate();
-    const [, setPostView] = useRecoilState(postViewState);
+    const [postView, setPostView] = useRecoilState(postViewState);
 
     const { data: posts, isLoading, error, mutate } = useSWR<Post[]>("/posts", async (url) => {
         if (!user) return;
@@ -40,7 +41,7 @@ export default function usePosts() {
                     message: "Post created successfully",
                     color: "blue"
                 });
-                mutate([...posts || [], data.post]);
+                mutate([...posts ?? [], data.post]);
                 setShowAddOrEdit(null);
             } else {
                 notifications.show({
@@ -125,6 +126,36 @@ export default function usePosts() {
         }
     }
 
+    const addComment = async (comment: Omit<Comment, "id" | "author" | "createdAt">, postId: string) => {
+        setAddingComment(true);
+        try {
+            const { data } = await axios.post(`/posts/${postId}/comments`, comment);
+            if (data.success) {
+                notifications.show({
+                    title: "Success",
+                    message: "Comment added successfully",
+                    color: "blue"
+                });
+                mutate(posts?.map(p => {
+                    if (p.id === postId) return data.post
+                    return p;
+                }));
+                setPostView(data.post);
+            }
+        } catch (error) {
+            console.error(error);
+            notifications.show({
+                title: "Error",
+                message: "An error occurred",
+                color: "red"
+            });
+        } finally {
+            setAddingComment(false);
+        }
+    }
+
+
+
     return {
         posts,
         fetchingPosts: isLoading,
@@ -134,7 +165,9 @@ export default function usePosts() {
         updatePost,
         creatingPost,
         deletingPost,
-        updatingPost
+        updatingPost,
+        addComment,
+        addingComment
     }
 
 }

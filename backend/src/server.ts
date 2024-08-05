@@ -3,9 +3,7 @@ import express = require("express");
 import cors = require("cors");
 import bodyParser = require("body-parser");
 import cookieParser = require("cookie-parser");
-import isAuthenticated from "./middlewares/auth";
 import authRouter from "./modules/auth/authRouter";
-import commentsRouter from "./modules/comments/commentsRouter";
 import postsRouter from "./modules/posts/postsRouter";
 import swaggerJsdoc = require('swagger-jsdoc');
 import swaggerUi = require('swagger-ui-express');
@@ -69,7 +67,7 @@ const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/auth", authRouter);
 app.use("/posts", postsRouter);
-app.use("/comments", isAuthenticated, commentsRouter);
+
 app.get("/", (req, res) => {
     res.send("Hello world");
 });

@@ -9,6 +9,7 @@ router.get("/", PostsController.getPosts);
 router.get("/:id", PostsController.getPostById);
 router.put("/:id", isAuthenticated, PostsController.updatePost);
 router.delete("/:id", isAuthenticated, PostsController.deletePost);
+router.post("/:id/comments", isAuthenticated, PostsController.addComment);
 
 const postsRouter = router;
 export default postsRouter;

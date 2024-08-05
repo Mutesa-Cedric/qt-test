@@ -9,6 +9,7 @@ import useAuth from '../hooks/useAuth';
 import axios from '../lib/axios.config';
 import { generatePageTitle } from '../lib/utils';
 import { postViewState, showAddOrEditPostModalState, showDeletePostModalState } from '../store';
+import usePosts from '../hooks/usePosts';
 
 export default function PostView() {
     const [post, setPost] = useRecoilState(postViewState)
@@ -18,6 +19,8 @@ export default function PostView() {
     const [comment, setComment] = React.useState("");
     const [, setShowAddOrEdit] = useRecoilState(showAddOrEditPostModalState);
     const [, setShowDelete] = useRecoilState(showDeletePostModalState);
+    const { addComment, addingComment } = usePosts();
+
     const { user } = useAuth();
 
     const fetchPost = async (postId: string) => {
@@ -91,7 +94,7 @@ export default function PostView() {
                                 <p className='text-gray-800'>No comments yet</p>
                             }
                             {(post.comments.length > 0) && post.comments.map((comment) => (
-                                <div key={comment.id} className='bg-gray-100 p-4 rounded-lg mt-2 border'>
+                                <div key={comment.id} className='p-2 rounded-lg mt-2 border'>
                                     <p className='text-gray-800'>{comment.content}</p>
                                     <p className='text-gray-600 text-sm mt-2'>by {comment.author.name}</p>
                                 </div>
@@ -104,9 +107,10 @@ export default function PostView() {
                                 placeholder="Add a comment"
                                 className='w-full'
                             ></Textarea>
-                            <Button onClick={() => {
-                                console.log("Comment", comment);
-                            }}>Add</Button>
+                            <Button
+                                loading={addingComment}
+                                disabled={addingComment || !comment}
+                                onClick={() => addComment({ content: comment }, post.id)}>Add</Button>
                         </div>}
                     </div>
                 </div>}
