@@ -13,10 +13,7 @@ import { Post } from "../types";
 export default function Home() {
     const { posts, fetchingPosts } = usePosts();
     const search = useRecoilValue(searchState);
-    const filteredPosts = useMemo(() => {
-        return posts?.filter(post => post.title.includes(search) || post.content.includes(search));
-    }
-        , [posts, search]);
+
 
     return (
         <>
@@ -25,10 +22,10 @@ export default function Home() {
             </Helmet>
             <MainLayout>
                 {fetchingPosts && <LoadingView message="Fetching posts..." />}
-                {(filteredPosts && filteredPosts.length === 0) && <EmptyView message={`no posts available ${search.length ? `containing '${search}'` : ''}!`} />}
-                {(filteredPosts && filteredPosts.length > 0) && <div className="space-y-5 pt-6">
+                {(posts && posts.length === 0) && <EmptyView message={`no posts available ${search.length ? `containing '${search}'` : ''}!`} />}
+                {(posts && posts.length > 0) && <div className="space-y-5 pt-6">
                     <h2 className="font-semibold text-2xl text-gray-700">Recent Posts</h2>
-                    {filteredPosts && filteredPosts.map((post: any) => (
+                    {posts && posts.map((post: any) => (
                         <PostCard post={post} />
                     ))}
                 </div>}

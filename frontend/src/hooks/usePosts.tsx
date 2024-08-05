@@ -22,14 +22,13 @@ export default function usePosts() {
     const [postView, setPostView] = useRecoilState(postViewState);
 
     const { data: posts, isLoading, error, mutate } = useSWR<Post[]>("/posts", async (url) => {
-        if (!user) return;
         const { data } = await axios.get(url);
         return data.posts;
     });
 
     useEffect(() => {
         mutate();
-    }, [user])
+    }, [])
 
     const createPost = async (post: Omit<Post, "id" | "createdAt" | "author" | "comments">) => {
         setCreatingPost(true);
