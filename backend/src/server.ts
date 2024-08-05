@@ -6,6 +6,7 @@ import cookieParser = require("cookie-parser");
 import authRouter from "./modules/auth/authRouter";
 import swaggerJsdoc = require('swagger-jsdoc');
 import swaggerUi = require('swagger-ui-express');
+import postsRouter from "./modules/posts/postsRouter";
 
 const PORT = process.env.PORT || 8000;
 
@@ -58,13 +59,14 @@ const swaggerOptions = {
             }
         ]
     },
-    apis: ["./src/modules/auth/*.ts", "./src/modules/users/*.ts", "./src/modules/products/*.ts"]
+    apis: ["./src/modules/auth/*.ts", "./src/modules/users/*.ts", "./src/modules/posts/*.ts"]
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/auth", authRouter);
+app.use("/posts", postsRouter);
 app.get("/", (req, res) => {
     res.send("Hello world");
 });
