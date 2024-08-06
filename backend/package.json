@@ -7,7 +7,8 @@
     "dev": "nodemon  src/server.ts",
     "build": "tsc",
     "start": "node dist/src/server.js",
-    "db:setup": "npx prisma db push && npx prisma generate && ts-node prisma/seed.ts"
+    "db:setup": "npx prisma db push && npx prisma generate && ts-node prisma/seed.ts",
+    "db:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",

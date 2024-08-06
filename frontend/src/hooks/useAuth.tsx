@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
             setUser(data.user);
             setCookie("token", data.token, 7);
+            axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             notifications.show({
                 title: "Success",
                 message: "Logged in successfully",
@@ -91,6 +92,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
             setUser(data.user);
             setCookie("token", data.token, 7);
+            axios.defaults.headers["Authorization"] = `Bearer ${data.token}`;
             navigate("/");
         } catch (error) {
             notifications.show({
@@ -110,6 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             deleteCookie("token");
             await axios.get("/auth/logout");
             setUser(null);
+            axios.defaults.headers["Authorization"] = "";
             notifications.show({
                 title: "Success",
                 message: "Logged out successfully",

@@ -114,7 +114,7 @@ export default function Navbar() {
                                 <div className="text-sm font-medium text-gray-500">{user?.email}</div>
                             </div>
                         </div>
-                        <div className="mx-auto mt-3 max-w-3xl space-y-1 px-2 sm:px-4">
+                        {user ? <div className="mx-auto mt-3 max-w-3xl space-x-2 px-2 sm:px-4">
                             <Button
                                 onClick={() => setShowAddPost({
                                     show: true,
@@ -130,7 +130,20 @@ export default function Navbar() {
                             >
                                 Sign Out
                             </Button>
-                        </div>
+                        </div> : <div className="mx-auto mt-3 max-w-3xl space-x-3 px-2 sm:px-4">
+                            <Button
+                                component={Link}
+                                to="/register"
+                            >
+                                Register
+                            </Button>
+                            <Button
+                                component={Link}
+                                to="/login"
+                            >
+                                Login
+                            </Button>
+                        </div>}
                     </div>
                 </PopoverPanel>
             </Popover>
